@@ -42,6 +42,8 @@ with col1:
     city = st.selectbox("City", sorted(clean["city"].unique()))
     city_localities = sorted(clean[clean["city"] == city]["locality"].unique())
     locality = st.selectbox("Locality", city_localities)
+    if locality not in known_localities:
+        st.caption("ℹ️ Limited data for this locality — the estimate falls back to a broader city-level group, so changing between sparse localities won't move the price much.")
     furnishing = st.selectbox("Furnishing", sorted(clean["furnishing"].unique()))
 with col2:
     beds = st.slider("Bedrooms (BHK)", 1, 4, 2)
