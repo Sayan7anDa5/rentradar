@@ -106,6 +106,34 @@ The app opens in your browser. Pick a city and locality, set the flat's details,
 
 ---
 
+## Data layer (PostgreSQL)
+
+Beyond the CSV that powers the app, the dataset is also modeled in a normalized PostgreSQL schema — a demonstration of SQL data modeling and querying.
+
+- **Schema** (`sql/schema.sql`): three tables — `cities` → `localities` → `listings` — with foreign keys, a `UNIQUE(name, city_id)` constraint (a locality name can recur across cities), and a `CHECK` on furnishing values.
+- **Loader** (`db/load_to_postgres.py`): reads `data/rentals_clean.csv` and populates the tables in foreign-key order — 5 cities, **1,990 locality rows** (1,968 distinct names, but 21 recur across cities), and 7,538 listings. Idempotent, safe to re-run.
+- **Queries** (`sql/queries.sql`) and a runnable notebook (`notebooks/sql_analysis.ipynb`): JOIN-based analysis — average rent by city, the furnished premium per city, the priciest localities with a reliable sample (`HAVING COUNT(*) >= 10`), and price-per-sqft leaders per city via a window function.
+
+### Setup
+
+```bash
+# 1. Create the role and database (one time)
+sudo -u postgres psql -c "CREATE ROLE rentradar LOGIN PASSWORD 'rentradar';"
+sudo -u postgres psql -c "CREATE DATABASE rentradar OWNER rentradar;"
+
+# 2. Configure the connection
+cp .env.example .env        # holds DATABASE_URL
+
+# 3. Create the schema and load the data
+.venv/bin/python -c "import psycopg2,os; from dotenv import load_dotenv; load_dotenv(); \
+c=psycopg2.connect(os.environ['DATABASE_URL']); c.cursor().execute(open('sql/schema.sql').read()); c.commit()"
+.venv/bin/python db/load_to_postgres.py
+```
+
+The Streamlit app itself still reads the CSV — the Postgres layer is a standalone analytics artifact.
+
+---
+
 ## Repository structure
 
 ```
@@ -114,16 +142,24 @@ rentradar/
 ├── DATA_QUALITY.md          # every data-cleaning decision
 ├── requirements.txt
 ├── app.py                   # the Streamlit app
+├── rentradar.py             # shared helper (locality bucketing)
 ├── data/
 │   ├── data.csv             # raw source data
 │   └── rentals_clean.csv    # cleaned dataset
+├── sql/
+│   ├── schema.sql           # normalized DDL
+│   └── queries.sql          # analytical JOIN queries
+├── db/
+│   └── load_to_postgres.py  # CSV -> Postgres loader
 ├── models/
 │   ├── rent_model.pkl       # trained Random Forest
-│   └── model_columns.pkl    # feature columns for inference
+│   ├── model_columns.pkl    # feature columns for inference
+│   └── known_localities.pkl # localities kept (rest bucketed to "Other")
 ├── notebooks/
 │   ├── EDA.ipynb            # exploration & cleaning
-│   ├── Stats.ipynb          # statistical testing
-│   └── modeling.ipynb       # model training & evaluation
+│   ├── Stats.ipynb          # statistical testing (+ Tukey HSD)
+│   ├── modeling.ipynb       # model training & evaluation
+│   └── sql_analysis.ipynb   # SQL queries over Postgres
 └── charts/                  # exported visualizations
 ```
 
@@ -132,7 +168,7 @@ rentradar/
 ## What's next
 
 - Deploy to a public URL (Streamlit Community Cloud)
-- Migrate the data layer to PostgreSQL
+- Point the live app at the PostgreSQL layer (currently CSV-backed)
 
 ---
 
