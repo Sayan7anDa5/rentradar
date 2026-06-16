@@ -17,6 +17,9 @@ env/
 # Streamlit
 .streamlit/secrets.toml
 
+# Local environment variables (DB credentials)
+.env
+
 # Claude Code local config / history (may contain tokens or local paths)
 .claude/
 .claude-code-history/
