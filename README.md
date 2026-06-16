@@ -162,14 +162,6 @@ rentradar/
 │   └── sql_analysis.ipynb   # SQL queries over Postgres
 └── charts/                  # exported visualizations
 ```
-
----
-
-## What's next
-
-- Deploy to a public URL (Streamlit Community Cloud)
-- Point the live app at the PostgreSQL layer (currently CSV-backed)
-
 ---
 
 **Built by Sayantan** — [LinkedIn](https://linkedin.com/in/sayantan-das-38982b27a) · [GitHub](https://github.com/Sayan7anDa5)
