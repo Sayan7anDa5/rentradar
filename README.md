@@ -5,7 +5,7 @@
 RentRadar is an end-to-end data product built on ~7,500 real rental listings across five Indian cities. It cleans messy listing data, uncovers what actually drives rent through statistical testing, trains a machine-learning model to predict fair prices, and serves it all through an interactive web app.
 
 <!-- TODO: replace with your live app link once deployed -->
-**🔗 [Try the live app](#)** &nbsp;·&nbsp; **📊 [See the findings](#key-findings)** &nbsp;·&nbsp; **🧠 [How it works](#how-it-works)**
+**🔗 [Try the live app](https://rent-radar.streamlit.app/)(#)** &nbsp;·&nbsp; **📊 [See the findings](#key-findings)** &nbsp;·&nbsp; **🧠 [How it works](#how-it-works)**
 
 <!-- TODO: add a screenshot or GIF of the app here once deployed -->
 <!-- ![RentRadar app](charts/app_demo.png) -->
