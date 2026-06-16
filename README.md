@@ -136,5 +136,4 @@ rentradar/
 
 ---
 
-<!-- TODO: replace [Your Name] with your display name -->
-**Built by [Your Name]** — [LinkedIn](https://linkedin.com/in/sayantan-das-38982b27a) · [GitHub](https://github.com/Sayan7anDa5)
+**Built by Sayantan** — [LinkedIn](https://linkedin.com/in/sayantan-das-38982b27a) · [GitHub](https://github.com/Sayan7anDa5)
