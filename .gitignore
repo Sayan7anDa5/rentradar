@@ -21,6 +21,9 @@ env/
 .claude/
 .claude-code-history/
 
+# Local design/spec notes (not part of the published project)
+docs/
+
 # Keep data and models tracked (they're needed for the app to run),
 # but ignore any large raw/intermediate files if present:
 data/raw/
