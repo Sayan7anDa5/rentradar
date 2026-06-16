@@ -40,6 +40,8 @@ Mumbai is the most expensive (~₹73,000 average), Nagpur the cheapest (~₹18,0
 
 ![Rent by city](charts/rent_by_city.png)
 
+**Which groups differ?** A one-way ANOVA only says *at least one* group stands out. Post-hoc **Tukey HSD** (which corrects for multiple comparisons) shows the differences are pervasive, not driven by a single outlier: **all 10 city pairs** differ significantly — even the closest, New Delhi vs Pune — and **all 6 bedroom pairs (1–4 BHK)** differ significantly. No two cities, and no two adjacent BHK levels, are statistically interchangeable.
+
 > **Note on interpretation:** these tests establish *statistical association*, not proven causation. The bedroom and city effects partly reflect differences in flat size and location.
 
 ---
@@ -51,12 +53,12 @@ I framed fair-rent prediction as a regression problem and benchmarked every mode
 | Model | RMSE (avg error) | vs. baseline |
 |---|---|---|
 | Baseline (locality average) | ₹41,434 | — |
-| Linear Regression | ₹31,580 | better |
-| **Random Forest** | **₹27,762** | **33% better** |
+| Linear Regression | ₹30,407 | better |
+| **Random Forest** | **₹29,180** | **30% better** |
 
-The **Random Forest beat the naive baseline by 33%**, capturing nonlinear relationships and feature interactions that a locality average alone misses.
+The **Random Forest beat the naive baseline by 30%**, capturing nonlinear relationships and feature interactions that a locality average alone misses.
 
-**Honest limitations:** the model's error is largest on ultra-luxury rentals (₹1 lakh+), which are sparse in the data — so very high-end flats are predicted less reliably. One-hot encoding localities also produced a high-dimensional feature space (1,762 columns), a candidate for future feature reduction.
+**Honest limitations:** the model's error is largest on ultra-luxury rentals (₹1 lakh+), which are sparse in the data — so very high-end flats are predicted less reliably. Locality sparsity was the other big issue: over 1,000 localities appeared only once. I bucketed every locality with fewer than 10 listings — counted on the training split only, to avoid leakage — into a single "Other" group, cutting the feature space from **1,762 to 145 columns**. This trades a little raw accuracy (an earlier 1,762-column model scored ~₹27,800 RMSE by memorizing one-off localities) for a far more defensible model that generalizes to unseen areas.
 
 ---
 
@@ -131,8 +133,6 @@ rentradar/
 
 - Deploy to a public URL (Streamlit Community Cloud)
 - Migrate the data layer to PostgreSQL
-- Group sparse localities to reduce feature dimensionality
-- Add post-hoc tests (Tukey HSD) to pinpoint which city/BHK pairs differ
 
 ---
 
