@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from rentradar import bucket_localities
 
 st.set_page_config(page_title="RentRadar", page_icon="🏠", layout="centered")
 
@@ -30,6 +31,7 @@ st.markdown("""
 
 model = joblib.load("models/rent_model.pkl")
 model_columns = joblib.load("models/model_columns.pkl")
+known_localities = joblib.load("models/known_localities.pkl")
 clean = pd.read_csv("data/rentals_clean.csv")
 
 st.title("🏠 RentRadar")
@@ -55,6 +57,7 @@ if st.button("Check This Deal"):
         "balconies": balconies, "furnishing": furnishing,
         "locality": locality, "city": city
     }])
+    input_df["locality"] = bucket_localities(input_df["locality"], known_localities)
     input_encoded = pd.get_dummies(input_df).reindex(columns=model_columns, fill_value=0)
     predicted = model.predict(input_encoded)[0]
 
